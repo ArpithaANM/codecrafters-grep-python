@@ -10,6 +10,15 @@ def matcher(input_line, pattern):
         return False
     if not pattern:
         return True
+    
+    # Handle "(cat|dog)" pattern using regex alternation
+    if pattern.startswith("(") and ")" in pattern:
+        closing_index = pattern.index(")")
+        options = pattern[1:closing_index].split("|")
+        for option in options:
+            if input_line.startswith(option):
+                return matcher(input_line[len(option):], pattern[closing_index + 1:])
+        return False
 
     if pattern.startswith("\\d") and input_line[0].isdigit():
         return matcher(input_line[1:], pattern[2:])
