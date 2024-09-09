@@ -15,6 +15,16 @@ def matcher(input_line, pattern):
         return matcher(input_line[1:], pattern[2:])
     elif pattern.startswith("\\w") and input_line[0].isalnum():
         return matcher(input_line[1:], pattern[2:])
+    elif len(pattern) > 1 and pattern[1] == "+":
+        char = pattern[0]
+        ptr = 0
+        # Match at least one occurrence of char
+        while ptr < len(input_line) and input_line[ptr] == char:
+            ptr += 1
+        if ptr == 0:
+            return False
+        # Try matching the rest of the pattern after the "+"
+        return matcher(input_line[ptr:], pattern[2:])
     elif input_line[0] == pattern[0]:
         return matcher(input_line[1:], pattern[1:])
     
