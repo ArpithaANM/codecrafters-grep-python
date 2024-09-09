@@ -4,30 +4,21 @@ import sys
 # import lark - available if you need it!
 
 def matcher(input_line, pattern):
-    ptr1 = 0
-    ptr2 = 0
-    if input_line == "" and pattern == "":
+    if not input_line and not pattern:
         return True
-    elif input_line == "":
+    if not input_line:
         return False
-    elif pattern == "":
+    if not pattern:
         return True
-    while ptr1 < len(input_line):
-        if ptr2 + 1 < len(pattern) and pattern[ptr2 : ptr2 + 2] == "\\d":
-            if input_line[ptr1].isdigit():
-                return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 2 :])
-            else:
-                ptr1 = ptr1 + 1
-        elif ptr2 + 1 < len(pattern) and pattern[ptr2 : ptr2 + 2] == "\\w":
-            if input_line[ptr1].isalnum():
-                return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 2 :])
-            else:
-                ptr1 = ptr1 + 1
-        elif input_line[ptr1] == pattern[ptr2]:
-            return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 1 :])
-        else:
-            ptr1 = ptr1 + 1
-    return False
+
+    if pattern.startswith("\\d") and input_line[0].isdigit():
+        return matcher(input_line[1:], pattern[2:])
+    elif pattern.startswith("\\w") and input_line[0].isalnum():
+        return matcher(input_line[1:], pattern[2:])
+    elif input_line[0] == pattern[0]:
+        return matcher(input_line[1:], pattern[1:])
+    
+    return matcher(input_line[1:], pattern)
 
 def match_pattern(input_line, pattern):
     if len(pattern) == 1:
