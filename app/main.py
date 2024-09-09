@@ -25,6 +25,8 @@ def match_pattern(input_line, pattern):
         return pattern in input_line
     elif pattern[0] == "^":
         return input_line.startswith(pattern[1:])
+    elif pattern.endswith("$"):
+        return input_line.endswith(pattern[:-1])
     elif pattern == "\\d":
         return any(c.isdigit() for c in input_line)
     elif pattern == "\w":
