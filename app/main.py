@@ -3,6 +3,31 @@ import sys
 # import pyparsing - available if you need it!
 # import lark - available if you need it!
 
+def matcher(input_line, pattern):
+    ptr1 = 0
+    ptr2 = 0
+    if input_line == "" and pattern == "":
+        return True
+    elif input_line == "":
+        return False
+    elif pattern == "":
+        return True
+    while ptr1 < len(input_line):
+        if ptr2 + 1 < len(pattern) and pattern[ptr2 : ptr2 + 2] == "\\d":
+            if input_line[ptr1].isdigit():
+                return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 2 :])
+            else:
+                ptr1 = ptr1 + 1
+        elif ptr2 + 1 < len(pattern) and pattern[ptr2 : ptr2 + 2] == "\\w":
+            if input_line[ptr1].isalnum():
+                return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 2 :])
+            else:
+                ptr1 = ptr1 + 1
+        elif input_line[ptr1] == pattern[ptr2]:
+            return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 1 :])
+        else:
+            ptr1 = ptr1 + 1
+    return False
 
 def match_pattern(input_line, pattern):
     if len(pattern) == 1:
@@ -16,7 +41,8 @@ def match_pattern(input_line, pattern):
             return not any(char in pattern[1:-1] for char in input_line)
         return any(c in pattern[1:-1] for c in input_line)
     else:
-        raise RuntimeError(f"Unhandled pattern: {pattern}")
+        # raise RuntimeError(f"Unhandled pattern: {pattern}")
+        return matcher(input_line, pattern)
 
 
 def main():
