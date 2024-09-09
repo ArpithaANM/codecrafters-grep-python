@@ -34,6 +34,8 @@ def matcher(input_line, pattern):
         if len(input_line) > 0 and input_line[0] == char:
             return matcher(input_line[1:], pattern[2:])
         return False
+    elif pattern[0] == ".":
+        return matcher(input_line[1:], pattern[1:])
     elif input_line[0] == pattern[0]:
         return matcher(input_line[1:], pattern[1:])
     
