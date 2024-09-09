@@ -25,6 +25,15 @@ def matcher(input_line, pattern):
             return False
         # Try matching the rest of the pattern after the "+"
         return matcher(input_line[ptr:], pattern[2:])
+    elif len(pattern) > 1 and pattern[1] == "?":
+        char = pattern[0]
+        # Match zero occurrence
+        if matcher(input_line, pattern[2:]):
+            return True
+        # Match one occurrence if available
+        if len(input_line) > 0 and input_line[0] == char:
+            return matcher(input_line[1:], pattern[2:])
+        return False
     elif input_line[0] == pattern[0]:
         return matcher(input_line[1:], pattern[1:])
     
@@ -36,7 +45,7 @@ def match_pattern(input_line, pattern):
     elif pattern[0] == "^":
         return input_line.startswith(pattern[1:])
     elif pattern.endswith("$"):
-        return input_line.endswith(pattern[:-1])
+        return input_line.endswith(pattern[:-1])    
     elif pattern == "\\d":
         return any(c.isdigit() for c in input_line)
     elif pattern == "\w":
