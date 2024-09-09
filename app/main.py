@@ -32,6 +32,8 @@ def matcher(input_line, pattern):
 def match_pattern(input_line, pattern):
     if len(pattern) == 1:
         return pattern in input_line
+    elif pattern[0] == "^":
+        return input_line.startswith(pattern[1:])
     elif pattern == "\\d":
         return any(c.isdigit() for c in input_line)
     elif pattern == "\w":
